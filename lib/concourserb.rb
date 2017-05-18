@@ -11,7 +11,6 @@ class Concourserb
         auth()
     end
 
-
     def jobs(pipeline_name)
         return req("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/jobs")
     end
