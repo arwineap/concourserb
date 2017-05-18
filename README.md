@@ -11,10 +11,16 @@ PRs are welcome for these, and other features
 ## Installation
 Add the following to your Gemfile
 
+upstream:
+```bash
+source "https://rubygems.org"
+gem "concourserb"
+```
+
+git:
 ```bash
 source 'https://rubygems.org'
 gem 'concourserb', :git => 'https://github.com/arwineap/concourserb'
-
 ```
 
 
