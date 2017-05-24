@@ -31,6 +31,10 @@ class Concourserb
         return req("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/resources/#{resource_name}/versions/#{resource_id}/output_of")
     end
 
+    def trigger(pipeline_name, job_name)
+        return post("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/jobs/#{job_name}/builds")
+    end
+
     private
 
     def auth()
@@ -44,20 +48,31 @@ class Concourserb
           return true
     end
 
-    def req(url)
+    def req(url, http_verb="GET", post_data={})
         http = Net::HTTP.new(URI.parse(@url).host, URI.parse(@url).port)
         http.use_ssl = true
-        request = Net::HTTP::Get.new(url)
+        if http_verb.eql?('GET')
+            request = Net::HTTP::Get.new(url)
+        elsif http_verb.eql?('POST')
+            request = Net::HTTP::Post.new(url)
+            request.set_form_data(post_data)
+        else
+            raise "http_verb not implemented: #{http_verb}"
+        end
         request['Content-Type'] = 'application/json'
-        request['Cookie'] = "ATC-Authorization=Bearer #{@ATC_auth}"
+        request['Authorization'] = "Bearer #{@ATC_auth}"
         response = http.request(request)
         if response.code == 401
             # we got bad auth, so get a new token
             auth()
-            request['Cookie'] = "ATC-Authorization=Bearer #{@ATC_auth}"
+            request['Authorization'] = "Bearer #{@ATC_auth}"
             response = http.request(request)
         end
         return JSON.parse(response.body)
+    end
+
+    def post(url, post_data={})
+        return req(url, 'POST')
     end
 
 end
