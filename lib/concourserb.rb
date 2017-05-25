@@ -19,6 +19,10 @@ class Concourserb
         return req("/api/v1/builds/#{build_id}/plan")
     end
 
+    def build(build_id)
+        return req("/api/v1/builds/#{build_id}")
+    end
+
     def versions(pipeline_name, resource_name)
         return req("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/resources/#{resource_name}/versions")
     end
