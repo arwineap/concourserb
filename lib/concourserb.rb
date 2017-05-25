@@ -80,7 +80,7 @@ class Concourserb
     end
 
     def post(url, post_data={})
-        return req(url, 'POST')
+        return req(url, 'POST', post_data)
     end
 
 end
