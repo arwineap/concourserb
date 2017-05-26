@@ -39,6 +39,14 @@ class Concourserb
         return post("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/jobs/#{job_name}/builds")
     end
 
+    def enable(pipeline_name, resource_name, version_id)
+        return put("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/resources/#{resource_name}/versions/#{version_id}/enable")
+    end
+
+    def disable(pipeline_name, resource_name, version_id)
+        return put("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/resources/#{resource_name}/versions/#{version_id}/disable")
+    end
+
     private
 
     def auth()
@@ -60,6 +68,8 @@ class Concourserb
         elsif http_verb.eql?('POST')
             request = Net::HTTP::Post.new(url)
             request.set_form_data(post_data)
+        elsif http_verb.eql?('PUT')
+            request = Net::HTTP::Put.new(url)
         else
             raise "http_verb not implemented: #{http_verb}"
         end
@@ -81,6 +91,10 @@ class Concourserb
 
     def post(url, post_data={})
         return req(url, 'POST', post_data)
+    end
+
+    def put(url)
+        return req(url, 'PUT')
     end
 
 end
