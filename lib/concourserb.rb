@@ -83,10 +83,9 @@ class Concourserb
             response = http.request(request)
         end
         if http_verb.eql?("PUT")
-            if response.code.eql?(200)
+            if response.code.eql?('200')
                 return true
             end
-            return false
         end
         return JSON.parse(response.body)
     end
