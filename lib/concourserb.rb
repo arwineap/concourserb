@@ -47,6 +47,14 @@ class Concourserb
         return put("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/resources/#{resource_name}/versions/#{version_id}/disable")
     end
 
+    def pause_job(pipeline_name, job_name)
+        return put("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/jobs/#{job_name}/pause")
+    end
+
+    def unpause_job(pipeline_name, job_name)
+        return put("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/jobs/#{job_name}/unpause")
+    end
+
     private
 
     def auth()
