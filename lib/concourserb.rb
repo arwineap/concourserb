@@ -23,8 +23,8 @@ class Concourserb
         return req("/api/v1/builds/#{build_id}")
     end
 
-    def versions(pipeline_name, resource_name)
-        return req("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/resources/#{resource_name}/versions")
+    def versions(pipeline_name, resource_name, limit=100)
+        return req("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/resources/#{resource_name}/versions?limit=#{limit}")
     end
 
     def input_to(pipeline_name, resource_name, resource_id)
