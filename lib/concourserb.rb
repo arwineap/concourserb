@@ -92,7 +92,7 @@ class Concourserb
         request['Content-Type'] = 'application/json'
         request['Authorization'] = "Bearer #{@ATC_auth}"
         response = http.request(request)
-        if response.code == 401
+        if response.code == 401 or response.body.eql?('not authorized')
             # we got bad auth, so get a new token
             auth()
             request['Authorization'] = "Bearer #{@ATC_auth}"
