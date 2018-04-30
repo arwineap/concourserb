@@ -68,7 +68,7 @@ class Concourserb
     def auth()
           http = Net::HTTP.new(URI.parse(@url).host, URI.parse(@url).port)
           http.use_ssl = true
-          request = Net::HTTP::Get.new("/api/v1/teams/#{@team}/auth/token")
+          request = Net::HTTP::Get.new("/auth/basic/token?team_name=#{@team}")
           request['Content-Type'] = 'application/json'
           request.basic_auth(@user, @pass)
           response = http.request(request)
