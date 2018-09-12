@@ -15,36 +15,148 @@ class Concourserb
         return req("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/jobs")
     end
 
-    def build_plan(build_id)
-        return req("/api/v1/builds/#{build_id}/plan")
+    def list_builds()
+        return get("/api/v1/builds")
+    end
+
+    def get_build(build_id)
+        return get("/api/v1/builds/#{build_id}")
     end
 
     def build(build_id)
-        return req("/api/v1/builds/#{build_id}")
+        # leaving for backwards compatibility
+        return get_build(build_id)
+    end
+
+    def get_build_plan(build_id)
+        return get("/api/v1/builds/#{build_id}/plan")
+    end
+
+    def build_plan(build_id)
+        return get_build_plan(build_id)
+    end
+
+    def send_input_to_build_plan(build_id, plan_id)
+        return put("/api/v1/builds/#{build_id}/plan/#{plan_id}/input")
+    end
+
+    def read_output_from_build_plan(build_id, plan_id)
+        return get("/api/v1/builds/#{build_id}/plan/#{plan_id}/output")
+    end
+
+    def build_events(build_id)
+        return get("/api/v1/builds/#{build_id}/events")
+    end
+
+    def build_resources(build_id)
+        return get("/api/v1/builds/#{build_id}/resources")
+    end
+
+    def abort_build(build_id)
+        return put("/api/v1/builds/#{build_id}/abort")
+    end
+
+    def get_build_preperation(build_id)
+        return get("/api/v1/builds/#{build_id}/preperation")
+    end
+
+    def list_resource_versions(pipeline_name, resource_name, limit=100)
+        return get("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/resources/#{resource_name}/versions?limit=#{limit}")
     end
 
     def versions(pipeline_name, resource_name, limit=100)
-        return req("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/resources/#{resource_name}/versions?limit=#{limit}")
+        # backwards compat
+        return list_resource_versions(pipeline_name, resource_name, limit)
+    end
+
+    def get_resource_version(pipeline_name, resource_name, resource_version_id)
+        return get("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/resources/#{resource_name}/versions/#{resource_version_id}")
+    end
+
+    def enable_resource_version(pipeline_name, resource_name, resource_version_id)
+        return put("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/resources/#{resource_name}/versions/#{resource_version_id}/enable")
+    end
+
+    def disable_resource_version(pipeline_name, resource_name, resource_version_id)
+        return put("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/resources/#{resource_name}/versions/#{resource_version_id}/disable")
+    end
+
+    def list_builds_with_version_as_input(pipeline_name, resource_name, resource_id)
+        return get("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/resources/#{resource_name}/versions/#{resource_id}/input_to")
     end
 
     def input_to(pipeline_name, resource_name, resource_id)
-        return req("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/resources/#{resource_name}/versions/#{resource_id}/input_to")
+        return list_builds_with_version_as_input(pipeline_name, resource_name, resource_id)
+    end
+
+    def list_builds_with_version_as_output(pipeline_name, resource_name, resource_id)
+        return get("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/resources/#{resource_name}/versions/#{resource_id}/output_to")
     end
 
     def output_of(pipeline_name, resource_name, resource_id)
-        return req("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/resources/#{resource_name}/versions/#{resource_id}/output_of")
+        return list_builds_with_version_as_output(pipeline_name, resource_name, resource_id)
+    end
+
+    def create_job_build(pipeline_name, job_name)
+      return post("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/jobs/#{job_name}/builds")
     end
 
     def trigger(pipeline_name, job_name)
-        return post("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/jobs/#{job_name}/builds")
+        # backwards compat
+        return create_job_build(pipeline_name, job_name)
     end
 
-    def enable(pipeline_name, resource_name, version_id)
+    def enable_resource_version(pipeline_name, resource_name, version_id)
         return put("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/resources/#{resource_name}/versions/#{version_id}/enable")
     end
 
-    def disable(pipeline_name, resource_name, version_id)
+    def enable(pipeline_name, resource_name, version_id)
+        # backwards compat
+        return enable_resource_version(pipeline_name, resource_name, version_id)
+    end
+
+    def disable_resource_version(pipeline_name, resource_name, version_id)
         return put("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/resources/#{resource_name}/versions/#{version_id}/disable")
+    end
+
+    def disable(pipeline_name, resource_name, version_id)
+        return disable_resource_version(pipeline_name, resource_name, version_id)
+    end
+
+    def pause_resource(pipeline_name, resource_name)
+        return put("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/resources/#{resource_name}/pause")
+    end
+
+    def unpause_resource(pipeline_name, resource_name)
+        return put("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/resources/#{resource_name}/unpause")
+    end
+
+    def list_all_jobs()
+        return get("/api/v1/jobs")
+    end
+
+    def list_jobs(pipeline_name)
+        return get("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/jobs")
+    end
+
+    def get_job(pipeline_name, job_name)
+        return get("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/jobs/#{job_name}")
+    end
+
+    def list_job_builds(pipeline_name, job_name)
+        return get("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/jobs/#{job_name}/builds")
+    end
+
+    def create_job_build(pipeline_name, job_name)
+        return post("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/jobs/#{job_name}/builds")
+    end
+
+    def list_job_inputs(pipeline_name, job_name)
+        return get("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/jobs/#{job_name}/inputs")
+    end
+
+    def get_job_build(pipeline_name, job_name, build_name)
+        return req("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/jobs/#{job_name}/builds/#{build_name}")
     end
 
     def pause_job(pipeline_name, job_name)
@@ -55,12 +167,12 @@ class Concourserb
         return put("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/jobs/#{job_name}/unpause")
     end
 
-    def pause_resource(pipeline_name, resource_name)
-        return put("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/resources/#{resource_name}/pause")
+    def job_badge(pipeline_name, job_name)
+        return get("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/jobs/#{job_name}/badge")
     end
 
-    def unpause_resource(pipeline_name, resource_name)
-        return put("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/resources/#{resource_name}/unpause")
+    def main_job_badge(pipeline_name, job_name)
+        return get("/api/v1/pipelines/#{pipeline_name}/jobs/#{job_name}/badge")
     end
 
     private
@@ -114,4 +226,7 @@ class Concourserb
         return req(url, 'PUT')
     end
 
+    def get(url)
+        return req(url, 'GET')
+    end
 end

@@ -23,6 +23,12 @@ source 'https://rubygems.org'
 gem 'concourserb', :git => 'https://github.com/arwineap/concourserb'
 ```
 
+local:
+```bash
+source 'https://rubygems.org'
+gem 'concourserb', :path => "~/git/concourserb"
+```
+
 
 ## Examples
 ```ruby
