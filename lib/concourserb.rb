@@ -73,14 +73,6 @@ class Concourserb
         return get("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/resources/#{resource_name}/versions/#{resource_version_id}")
     end
 
-    def enable_resource_version(pipeline_name, resource_name, resource_version_id)
-        return put("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/resources/#{resource_name}/versions/#{resource_version_id}/enable")
-    end
-
-    def disable_resource_version(pipeline_name, resource_name, resource_version_id)
-        return put("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/resources/#{resource_name}/versions/#{resource_version_id}/disable")
-    end
-
     def list_builds_with_version_as_input(pipeline_name, resource_name, resource_id)
         return get("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/resources/#{resource_name}/versions/#{resource_id}/input_to")
     end
@@ -145,10 +137,6 @@ class Concourserb
 
     def list_job_builds(pipeline_name, job_name)
         return get("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/jobs/#{job_name}/builds")
-    end
-
-    def create_job_build(pipeline_name, job_name)
-        return post("/api/v1/teams/#{@team}/pipelines/#{pipeline_name}/jobs/#{job_name}/builds")
     end
 
     def list_job_inputs(pipeline_name, job_name)
