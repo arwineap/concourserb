@@ -11,7 +11,7 @@ PRs are welcome for these, and other features
 ## compatibility
 Use version 0.0.16 for concourse 3.x and below
 
-Use version 0.0.17 at your own risk; for concourse 4.x  
+Use version 0.0.18 at your own risk; for concourse 4.x  
 The auth right now is hacky at best.
 
 ## Installation
