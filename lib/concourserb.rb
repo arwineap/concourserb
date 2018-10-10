@@ -175,11 +175,13 @@ class Concourserb
           request = Net::HTTP::Get.new(URI.parse(response['location']))
           request['Cookie'] = cookie_value
           response = http.request(request)
-          request = Net::HTTP::Post.new(URI.parse("#{URI.parse(@url).host}#{response.body.split("\n").select{ |x| x.include?('/sky/issuer/auth/local') }.first.strip.split('"')[1]}"))
+          next_url = URI.parse("#{URI.parse(@url).host}#{response.body.split("\n").select{ |x| x.include?('/sky/issuer/auth/local') }.first.strip.split('"')[1]}")
+          request = Net::HTTP::Post.new("https://#{next_url}")
           request.set_form_data({'login': @user, 'password': @pass})
           request['Cookie'] = cookie_value
           response = http.request(request)
-          request = Net::HTTP::Get.new(URI.parse("#{URI.parse(@url).host}#{response['location']}"))
+          next_url = "https://#{response['location']}"
+          request = Net::HTTP::Get.new(URI.parse(next_url))
           request['Cookie'] = cookie_value
           response = http.request(request)
           request = Net::HTTP::Get.new(URI.parse(response['location']))
