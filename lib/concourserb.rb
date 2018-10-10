@@ -166,13 +166,26 @@ class Concourserb
     private
 
     def auth()
+          # TODO fix this up to be cleaner; this is the first POC for concourse auth 4.0
           http = Net::HTTP.new(URI.parse(@url).host, URI.parse(@url).port)
           http.use_ssl = true
-          request = Net::HTTP::Get.new("/auth/basic/token?team_name=#{@team}")
-          request['Content-Type'] = 'application/json'
-          request.basic_auth(@user, @pass)
+          request = Net::HTTP::Get.new("https://#{URI.parse(@url).host}/sky/login")
           response = http.request(request)
-          @ATC_auth = JSON.parse(response.body)["value"]
+          cookie_value = response['set-cookie'].split(';')[0]
+          request = Net::HTTP::Get.new(URI.parse(response['location']))
+          request['Cookie'] = cookie_value
+          response = http.request(request)
+          request = Net::HTTP::Post.new(URI.parse("#{URI.parse(@url).host}#{response.body.split("\n").select{ |x| x.include?('/sky/issuer/auth/local') }.first.strip.split('"')[1]}"))
+          request.set_form_data({'login': @user, 'password': @pass})
+          request['Cookie'] = cookie_value
+          response = http.request(request)
+          request = Net::HTTP::Get.new(URI.parse("#{URI.parse(@url).host}#{response['location']}"))
+          request['Cookie'] = cookie_value
+          response = http.request(request)
+          request = Net::HTTP::Get.new(URI.parse(response['location']))
+          request['Cookie'] = cookie_value
+          response = http.request(request)
+          @ATC_auth =  response.to_hash['set-cookie'].select { |x| x.include?('skymarshal_auth="Bearer') }[0].split('"')[1].split(" ")[1]
           return true
     end
 
