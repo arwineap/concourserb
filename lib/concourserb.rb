@@ -167,21 +167,10 @@ class Concourserb
 
     def auth()
           # TODO fix this up to be cleaner; this is the first POC for concourse auth 4.0
-          host = @URI.parse(@url)
-          port = URI.parse(@url).port
-          http = Net::HTTP.new(host, port)
+          http = Net::HTTP.new(URI.parse(@url).host, URI.parse(@url).port)
           http.use_ssl = true
           request = Net::HTTP::Get.new("https://#{URI.parse(@url).host}/sky/login")
           response = http.request(request)
-          case response
-          when Net::HTTPSuccess then
-              break
-          when Net::HTTPRedirection then
-              location = response['Location']
-              cookie_value = response['set-cookie'].split(';')[0]
-              if URI.parse(response['Location']).host
-          else
-              raise "unexpected response"
           cookie_value = response['set-cookie'].split(';')[0]
           request = Net::HTTP::Get.new(URI.parse(response['location']))
           request['Cookie'] = cookie_value
@@ -191,7 +180,7 @@ class Concourserb
           request.set_form_data({'login': @user, 'password': @pass})
           request['Cookie'] = cookie_value
           response = http.request(request)
-          next_url = "https://#{URI.parse(@url).host}#{response['location']}"
+          next_url = "https://#{response['location']}"
           request = Net::HTTP::Get.new(URI.parse(next_url))
           request['Cookie'] = cookie_value
           response = http.request(request)
