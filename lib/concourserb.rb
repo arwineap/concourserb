@@ -180,7 +180,7 @@ class Concourserb
           request.set_form_data({'login': @user, 'password': @pass})
           request['Cookie'] = cookie_value
           response = http.request(request)
-          next_url = "https://#{response['location']}"
+          next_url = "https://#{URI.parse(@url).host}#{response['location']}"
           request = Net::HTTP::Get.new(URI.parse(next_url))
           request['Cookie'] = cookie_value
           response = http.request(request)
